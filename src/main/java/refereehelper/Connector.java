@@ -6,7 +6,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
-import java.util.List;
+
 
 public class Connector {
 	private static final String url = "jdbc:mysql://localhost:3306/referee";
@@ -25,6 +25,7 @@ public class Connector {
     	try {
 	    	connection = DriverManager.getConnection(url, username, password);
 	    	statement = connection.createStatement();
+	    	System.out.println("MySQL connected");
     	} catch (SQLException e) {
     		throw new IllegalStateException("Cannot connect the database!", e);
     	}
