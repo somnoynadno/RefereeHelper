@@ -1,0 +1,67 @@
+﻿$pink-color: lightpink;
+$green-color: lightgreen;
+$blue-color: lightblue;
+
+body, html {
+    height: 100%;
+}
+
+.carousel-caption {
+    transform: translateY(-50%);
+    bottom: 0;
+    top: 50%;
+}
+
+.carousel-inner {
+    width: 100%;
+}
+
+.carousel-item img {
+    height: 300px !important;
+}
+
+.color-to-pink {
+    #collapseCards .card {
+
+        .card-body {
+            background-color: $pink-color;
+        }
+
+        .card-text {    
+            &:before {
+                content: "";
+            }
+
+            &:after {
+                content: "\a\a This text added via CSS.";
+                white-space: pre;
+            }
+        }
+    }
+}
+
+.color-to-green {
+    #collapseCards .card {
+
+        .card-body {
+            background-color: $green-color;
+        }
+
+        .card-text {
+            font-weight: bolder;
+        }
+    }
+}
+
+.color-to-blue {
+    #collapseCards .card {
+
+        .card-body {
+            background-color: $blue-color;
+        }
+
+        .card-text {
+            font-style: italic;
+        }
+    }
+}
