@@ -1,4 +1,4 @@
-package refereehelper;
+package refereehelper.utils;
 
 import org.hibernate.HibernateException;
 import org.hibernate.SessionFactory;

@@ -3,7 +3,7 @@
         "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
 
 <hibernate-mapping>
-    <class name="refereehelper.User" table="user" catalog="referee">
+    <class name="refereehelper.models.User" table="user" catalog="referee">
         <id name="userId" type="java.lang.Integer">
             <column name="USER_ID" />
             <generator class="identity" />
