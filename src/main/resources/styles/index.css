@@ -10,7 +10,7 @@ body, html {
   width: 100%; }
 
 .carousel-item img {
-  height: 300px !important; }
+  height: 500px !important; }
 
 .color-to-pink #collapseCards .card .card-body {
   background-color: lightpink; }
