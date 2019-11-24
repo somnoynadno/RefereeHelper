@@ -15,5 +15,7 @@
 
         <mapping resource="refereehelper/User.hbm.xml"/>
         <mapping resource="refereehelper/Request.hbm.xml"/>
+        <mapping resource="refereehelper/Team.hbm.xml"/>
+        <mapping resource="refereehelper/GameType.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

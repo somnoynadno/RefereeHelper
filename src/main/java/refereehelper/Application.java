@@ -5,7 +5,9 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import refereehelper.models.GameType;
 import refereehelper.models.Request;
+import refereehelper.models.Team;
 import refereehelper.utils.HibernateUtil;
 
 import java.util.List;
@@ -53,7 +55,97 @@ public class Application {
 			Session session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
 
-			Query query = session.createQuery("from Request");
+			Query query = session.createQuery("from Request where is_accepted='0'");
+			List<Request> list = query.getResultList();
+
+			ObjectMapper ow = new ObjectMapper();
+			String json = ow.writeValueAsString(list);
+
+			System.out.println(json);
+			session.close();
+			return json;
+		});
+
+		get("api/v1/team/:id", (req, res) -> {
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			ObjectMapper ow = new ObjectMapper();
+			Integer id = Integer.parseInt(req.params(":id"));
+
+			Team team = session.load(Team.class, id);
+			session.close();
+			try {
+				res.header("Content-Type", "application/json");
+
+				String json = ow.writeValueAsString(team);
+				System.out.println(json);
+				return json;
+			} catch (JsonMappingException e) {
+				System.out.println("Request not found");
+				res.status(404);
+				return "Request not found";
+			}
+			catch (JsonProcessingException e) {
+				// catch various errors
+				e.printStackTrace();
+				res.status(500);
+				return "Oh shit";
+			}
+		});
+
+		get("api/v1/team/", (req, res) -> {
+			res.header("Content-Type", "application/json");
+
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			Query query = session.createQuery("from Team");
+			List<Request> list = query.getResultList();
+
+			ObjectMapper ow = new ObjectMapper();
+			String json = ow.writeValueAsString(list);
+
+			System.out.println(json);
+			session.close();
+			return json;
+		});
+
+		get("api/v1/game_type/:id", (req, res) -> {
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			ObjectMapper ow = new ObjectMapper();
+			Integer id = Integer.parseInt(req.params(":id"));
+
+			GameType gt = session.load(GameType.class, id);
+			session.close();
+			try {
+				res.header("Content-Type", "application/json");
+
+				String json = ow.writeValueAsString(gt);
+				System.out.println(json);
+				return json;
+			} catch (JsonMappingException e) {
+				System.out.println("Request not found");
+				res.status(404);
+				return "Request not found";
+			}
+			catch (JsonProcessingException e) {
+				// catch various errors
+				e.printStackTrace();
+				res.status(500);
+				return "Oh shit";
+			}
+		});
+
+		get("api/v1/game_type/", (req, res) -> {
+			res.header("Content-Type", "application/json");
+
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			Query query = session.createQuery("from GameType");
 			List<Request> list = query.getResultList();
 
 			ObjectMapper ow = new ObjectMapper();
@@ -64,4 +156,5 @@ public class Application {
 			return json;
 		});
 	}
+
 }
