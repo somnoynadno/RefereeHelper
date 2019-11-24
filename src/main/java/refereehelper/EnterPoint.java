@@ -67,6 +67,8 @@ public class EnterPoint {
 
         session.save(request);
         session.getTransaction().commit();
+
+        session.close();
     }
 
 }
