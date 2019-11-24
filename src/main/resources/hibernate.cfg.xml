@@ -13,5 +13,6 @@
         <property name="show_sql">true</property>
 
         <mapping resource="refereehelper/User.hbm.xml"/>
+        <mapping resource="refereehelper/Request.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

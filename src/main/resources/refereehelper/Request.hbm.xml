@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="refereehelper.models.Request" table="application" catalog="referee">
+        <id name="ID" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="identity" />
+        </id>
+        <property name="team1ID" type="int">
+            <column name="team1_ID" not-null="true" unique="false" />
+        </property>
+        <property name="team2ID" type="int">
+            <column name="team2_ID" not-null="true" unique="false" />
+        </property>
+        <property name="date" type="timestamp">
+            <column name="date" not-null="false" unique="false" />
+        </property>
+        <property name="isAccepted" type="byte">
+            <column name="is_accepted" not-null="true" unique="false" />
+        </property>
+        <property name="gameTypeID" type="int">
+            <column name="game_type_ID" not-null="true" unique="false" />
+        </property>
+        <property name="description" type="string">
+            <column name="description" not-null="true" unique="false" length="100" />
+        </property>
+    </class>
+</hibernate-mapping>
