@@ -55,7 +55,11 @@ public class Application {
 			Session session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
 
-			Query query = session.createQuery("from Request where is_accepted='0'");
+			Query query = session.createQuery("select R.ID, GT.name, T1.name, T2.name, R.date from Request as R " +
+					"join Team as T1 on T1.ID = R.team1ID " +
+					"join Team as T2 on T2.ID = R.team2ID " +
+					"join GameType as GT on GT.ID = R.gameTypeID " +
+					"where R.isAccepted='0'");
 			List<Request> list = query.getResultList();
 
 			ObjectMapper ow = new ObjectMapper();
@@ -72,7 +76,11 @@ public class Application {
 			Session session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
 
-			Query query = session.createQuery("from Request where is_accepted='1'");
+			Query query = session.createQuery("select R.ID, GT.name, T1.name, T2.name, R.date from Request as R " +
+					"join Team as T1 on T1.ID = R.team1ID " +
+					"join Team as T2 on T2.ID = R.team2ID " +
+					"join GameType as GT on GT.ID = R.gameTypeID " +
+					"where R.isAccepted='1'");
 			List<Request> list = query.getResultList();
 
 			ObjectMapper ow = new ObjectMapper();

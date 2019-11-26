@@ -19,13 +19,15 @@ document.addEventListener('DOMContentLoaded', async function(){
             button1.type = "button";
             button2.type = "button";
 
-            tr.id = "TR" + elem.id;
+            tr.id = "TR" + elem[0];
 
-            id.textContent = elem.id;
-            gt.textContent = elem.gameTypeID;
-            team1.textContent = elem.team1ID;
-            team2.textContent = elem.team2ID;
-            date.textContent = elem.date;
+            id.textContent = elem[0];
+            gt.textContent = elem[1];
+            team1.textContent = elem[2];
+            team2.textContent = elem[3];
+
+            d = new Date(elem[4]);
+            date.textContent = d.toISOString().substring(0, 10) + " " + d.toISOString().substring(11, 16);
 
             button1.textContent = "Apply";
             button2.textContent = "Discard";
@@ -34,19 +36,19 @@ document.addEventListener('DOMContentLoaded', async function(){
             button2.className = "btn btn-danger btn-sm";
 
             button1.addEventListener('click', async function(){
-                console.log("Apply " + elem.id);
-                let response = await fetch('http://localhost:4567/api/v1/request/accept/' + elem.id);
+                console.log("Apply " + elem[0]);
+                let response = await fetch('http://localhost:4567/api/v1/request/accept/' + elem[0]);
                 let result = await response.text();
                 console.log(result);
-                $("#TR" + elem.id).remove();
+                $("#TR" + elem[0]).remove();
             });
 
             button2.addEventListener('click', async function(){
-                console.log("Discard " + elem.id);
-                let response = await fetch('http://localhost:4567/api/v1/request/remove/' + elem.id);
+                console.log("Discard " + elem[0]);
+                let response = await fetch('http://localhost:4567/api/v1/request/remove/' + elem[0]);
                 let result = await response.text();
                 console.log(result);
-                $("#TR" + elem.id).remove();
+                $("#TR" + elem[0]).remove();
             });
 
             buttons.appendChild(button1);

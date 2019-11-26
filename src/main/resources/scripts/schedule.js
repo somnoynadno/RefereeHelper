@@ -14,11 +14,14 @@ document.addEventListener('DOMContentLoaded', async function(){
 
             id.scope = "row";
 
-            id.textContent = elem.id;
-            gt.textContent = elem.gameTypeID;
-            team1.textContent = elem.team1ID;
-            team2.textContent = elem.team2ID;
-            date.textContent = elem.date;
+            id.textContent = elem[0];
+            gt.textContent = elem[1];
+            team1.textContent = elem[2];
+            team2.textContent = elem[3];
+
+            d = new Date(elem[4]);
+
+            date.textContent = d.toISOString().substring(0, 10) + " " + d.toISOString().substring(11, 16);
 
             tr.appendChild(id);
             tr.appendChild(gt);
