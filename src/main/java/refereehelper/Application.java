@@ -49,13 +49,30 @@ public class Application {
 			}
 		});
 
-		get("api/v1/request/", (req, res) -> {
+		get("api/v1/request/not_accepted/", (req, res) -> {
 			res.header("Content-Type", "application/json");
 
 			Session session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
 
 			Query query = session.createQuery("from Request where is_accepted='0'");
+			List<Request> list = query.getResultList();
+
+			ObjectMapper ow = new ObjectMapper();
+			String json = ow.writeValueAsString(list);
+
+			System.out.println(json);
+			session.close();
+			return json;
+		});
+
+		get("api/v1/request/accepted/", (req, res) -> {
+			res.header("Content-Type", "application/json");
+
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			Query query = session.createQuery("from Request where is_accepted='1'");
 			List<Request> list = query.getResultList();
 
 			ObjectMapper ow = new ObjectMapper();

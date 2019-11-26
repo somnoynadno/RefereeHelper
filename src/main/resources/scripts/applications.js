@@ -1,5 +1,5 @@
 document.addEventListener('DOMContentLoaded', async function(){
-        let response = await fetch('http://localhost:4567/api/v1/request/');
+        let response = await fetch('http://localhost:4567/api/v1/request/not_accepted/');
         let myJson = await response.json();
 
         console.log(myJson);

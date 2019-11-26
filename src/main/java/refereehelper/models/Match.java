@@ -4,12 +4,15 @@ import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
 import java.util.Date;
+import java.util.HashSet;
+import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Match implements Serializable {
     private Integer ID;
     private Date date;
     private Integer gameTypeID;
+    private Set<Team> teams = new HashSet<Team>(0);
 
     public Match() {
 
@@ -27,6 +30,10 @@ public class Match implements Serializable {
         return date;
     }
 
+    public Set<Team> getTeams() {
+        return teams;
+    }
+
     public void setGameTypeID(Integer gameTypeID) {
         this.gameTypeID = gameTypeID;
     }
@@ -37,5 +44,9 @@ public class Match implements Serializable {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public void setTeams(Set<Team> teams) {
+        this.teams = teams;
     }
 }

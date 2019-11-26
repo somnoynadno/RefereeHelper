@@ -3,6 +3,8 @@ package refereehelper.models;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Team implements Serializable {
@@ -12,6 +14,7 @@ public class Team implements Serializable {
     private Integer ID;
     private String name;
     private Integer gameTypeID;
+    private Set<Match> matches = new HashSet<Match>(0);
 
     public Team(){
 
@@ -29,6 +32,10 @@ public class Team implements Serializable {
         return name;
     }
 
+    public Set<Match> getMatches() {
+        return matches;
+    }
+
     public void setID(Integer ID) {
         this.ID = ID;
     }
@@ -39,5 +46,9 @@ public class Team implements Serializable {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    public void setMatches(Set<Match> matches) {
+        this.matches = matches;
     }
 }
