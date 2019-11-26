@@ -83,6 +83,39 @@ public class Application {
 			return json;
 		});
 
+		get("api/v1/request/accept/:id", (req, res) -> {
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			ObjectMapper ow = new ObjectMapper();
+			Integer id = Integer.parseInt(req.params(":id"));
+
+			Request request = session.load(Request.class, id);
+			request.setIsAccepted(Byte.valueOf("1"));
+			session.update(request);
+
+			session.getTransaction().commit();
+			session.close();
+
+			return "Fine";
+		});
+
+		get("api/v1/request/remove/:id", (req, res) -> {
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			ObjectMapper ow = new ObjectMapper();
+			Integer id = Integer.parseInt(req.params(":id"));
+
+			Request request = session.load(Request.class, id);
+
+			session.remove(request);
+			session.getTransaction().commit();
+			session.close();
+
+			return "Fine";
+		});
+
 		get("api/v1/team/:id", (req, res) -> {
 			Session session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();

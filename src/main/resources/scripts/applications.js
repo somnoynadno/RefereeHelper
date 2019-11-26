@@ -19,6 +19,8 @@ document.addEventListener('DOMContentLoaded', async function(){
             button1.type = "button";
             button2.type = "button";
 
+            tr.id = "TR" + elem.id;
+
             id.textContent = elem.id;
             gt.textContent = elem.gameTypeID;
             team1.textContent = elem.team1ID;
@@ -30,6 +32,22 @@ document.addEventListener('DOMContentLoaded', async function(){
 
             button1.className = "btn btn-success btn-sm mr-1";
             button2.className = "btn btn-danger btn-sm";
+
+            button1.addEventListener('click', async function(){
+                console.log("Apply " + elem.id);
+                let response = await fetch('http://localhost:4567/api/v1/request/accept/' + elem.id);
+                let result = await response.text();
+                console.log(result);
+                $("#TR" + elem.id).remove();
+            });
+
+            button2.addEventListener('click', async function(){
+                console.log("Discard " + elem.id);
+                let response = await fetch('http://localhost:4567/api/v1/request/remove/' + elem.id);
+                let result = await response.text();
+                console.log(result);
+                $("#TR" + elem.id).remove();
+            });
 
             buttons.appendChild(button1);
             buttons.appendChild(button2);
