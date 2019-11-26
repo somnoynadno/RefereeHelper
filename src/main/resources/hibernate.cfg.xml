@@ -19,5 +19,7 @@
         <mapping resource="refereehelper/GameType.hbm.xml"/>
         <mapping resource="refereehelper/Player.hbm.xml"/>
         <mapping resource="refereehelper/Match.hbm.xml"/>
+        <mapping resource="refereehelper/Event.hbm.xml"/>
+        <mapping resource="refereehelper/EventType.hbm.xml"/>
     </session-factory>
 </hibernate-configuration>

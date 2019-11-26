@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+        "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+    <class name="refereehelper.models.Event" table="event" catalog="referee">
+        <id name="ID" type="java.lang.Integer">
+            <column name="ID" />
+            <generator class="identity" />
+        </id>
+        <property name="matchID" type="int">
+            <column name="match_ID" not-null="true" unique="false" />
+        </property>
+        <property name="eventTypeID" type="int">
+            <column name="event_type_ID" not-null="true" unique="false" />
+        </property>
+        <property name="time" type="int">
+            <column name="time" not-null="true" unique="false" />
+        </property>
+    </class>
+</hibernate-mapping>
