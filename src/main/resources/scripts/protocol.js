@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', async function(){
         $("#IDFormRow").show();
     } else {
         // render main window
+        $("#ProtocolMain").show();
         let response = await fetch('http://localhost:4567/api/v1/request/' + id);
         let myJson = await response.json();
         d = new Date(myJson.date);
