@@ -11,6 +11,7 @@ document.addEventListener('DOMContentLoaded', async function(){
             let team1 = document.createElement('td');
             let team2 = document.createElement('td');
             let date = document.createElement('td');
+            let button = document.createElement('button');
 
             id.scope = "row";
 
@@ -20,14 +21,22 @@ document.addEventListener('DOMContentLoaded', async function(){
             team2.textContent = elem[3];
 
             d = new Date(elem[4]);
-
             date.textContent = d.toISOString().substring(0, 10) + " " + d.toISOString().substring(11, 16);
+
+            button.className = "btn btn-primary btn-sm mt-2";
+            button.textContent = "New protocol";
+
+            button.addEventListener('click', function(){
+                console.log("To protocol " + elem[0]);
+                window.location.href = 'protocol.html?id=' + elem[0];
+            });
 
             tr.appendChild(id);
             tr.appendChild(gt);
             tr.appendChild(team1);
             tr.appendChild(team2);
             tr.appendChild(date);
+            tr.appendChild(button);
 
             $('#ScheduleTableBody').append(tr);
         }

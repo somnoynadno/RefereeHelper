@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
+import refereehelper.models.EventType;
 import refereehelper.models.GameType;
 import refereehelper.models.Request;
 import refereehelper.models.Team;
@@ -132,6 +133,7 @@ public class Application {
 			Integer id = Integer.parseInt(req.params(":id"));
 
 			Team team = session.load(Team.class, id);
+			System.out.println(team);
 			session.close();
 			try {
 				res.header("Content-Type", "application/json");
@@ -140,9 +142,9 @@ public class Application {
 				System.out.println(json);
 				return json;
 			} catch (JsonMappingException e) {
-				System.out.println("Request not found");
+				System.out.println("Team not found");
 				res.status(404);
-				return "Request not found";
+				return "Team not found";
 			}
 			catch (JsonProcessingException e) {
 				// catch various errors
@@ -204,6 +206,51 @@ public class Application {
 			session.beginTransaction();
 
 			Query query = session.createQuery("from GameType");
+			List<Request> list = query.getResultList();
+
+			ObjectMapper ow = new ObjectMapper();
+			String json = ow.writeValueAsString(list);
+
+			System.out.println(json);
+			session.close();
+			return json;
+		});
+
+		get("api/v1/event_type/:id", (req, res) -> {
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			ObjectMapper ow = new ObjectMapper();
+			Integer id = Integer.parseInt(req.params(":id"));
+
+			EventType et = session.load(EventType.class, id);
+			session.close();
+			try {
+				res.header("Content-Type", "application/json");
+
+				String json = ow.writeValueAsString(et);
+				System.out.println(json);
+				return json;
+			} catch (JsonMappingException e) {
+				System.out.println("Request not found");
+				res.status(404);
+				return "Request not found";
+			}
+			catch (JsonProcessingException e) {
+				// catch various errors
+				e.printStackTrace();
+				res.status(500);
+				return "Oh shit";
+			}
+		});
+
+		get("api/v1/event_type/", (req, res) -> {
+			res.header("Content-Type", "application/json");
+
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			Query query = session.createQuery("from EventType");
 			List<Request> list = query.getResultList();
 
 			ObjectMapper ow = new ObjectMapper();

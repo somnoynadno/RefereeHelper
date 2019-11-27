@@ -24,7 +24,7 @@
             <key>
                 <column name="player_ID" not-null="true" />
             </key>
-            <many-to-many entity-name="refereehelper.models.Event">
+            <many-to-many class="refereehelper.models.Event">
                 <column name="event_ID" not-null="true" />
             </many-to-many>
         </set>
