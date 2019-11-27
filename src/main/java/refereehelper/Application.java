@@ -5,10 +5,7 @@ import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
-import refereehelper.models.EventType;
-import refereehelper.models.GameType;
-import refereehelper.models.Request;
-import refereehelper.models.Team;
+import refereehelper.models.*;
 import refereehelper.utils.HibernateUtil;
 
 import java.util.List;
@@ -16,7 +13,7 @@ import java.util.List;
 import static spark.Spark.*;
 
 public class Application {
-	
+
 	public static void main(String[] args) {
 		staticFileLocation("/");
 
@@ -251,6 +248,55 @@ public class Application {
 			session.beginTransaction();
 
 			Query query = session.createQuery("from EventType");
+			List<Request> list = query.getResultList();
+
+			ObjectMapper ow = new ObjectMapper();
+			String json = ow.writeValueAsString(list);
+
+			System.out.println(json);
+			session.close();
+			return json;
+		});
+
+		get("api/v1/match/:id", (req, res) -> {
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			ObjectMapper ow = new ObjectMapper();
+			Integer id = Integer.parseInt(req.params(":id"));
+
+			Match m = session.load(Match.class, id);
+			session.close();
+			try {
+				res.header("Content-Type", "application/json");
+
+				String json = ow.writeValueAsString(m);
+				System.out.println(json);
+				return json;
+			} catch (JsonMappingException e) {
+				System.out.println("Match not found");
+				res.status(404);
+				return "Match not found";
+			}
+			catch (JsonProcessingException e) {
+				// catch various errors
+				e.printStackTrace();
+				res.status(500);
+				return "Oh shit";
+			}
+		});
+
+		get("api/v1/match/", (req, res) -> {
+			res.header("Content-Type", "application/json");
+
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			Query query = session.createNativeQuery("select M.ID, M.date, GT.name as n, T.name " +
+					"from game_match as M " +
+					"left join match_team as MT on MT.match_ID = M.ID " +
+					"join game_type as GT on GT.ID = M.game_type_ID " +
+					"left join team as T on T.ID = MT.team_ID;");
 			List<Request> list = query.getResultList();
 
 			ObjectMapper ow = new ObjectMapper();

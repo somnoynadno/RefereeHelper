@@ -14,7 +14,7 @@
         <property name="date" type="timestamp">
             <column name="date" not-null="true" unique="false" />
         </property>
-        <set name="teams" table="match_team" inverse="true" lazy="true" fetch="select">
+        <set name="teams" table="match_team" inverse="true" lazy="false" fetch="select">
             <key>
                 <column name="match_ID" not-null="true" />
             </key>

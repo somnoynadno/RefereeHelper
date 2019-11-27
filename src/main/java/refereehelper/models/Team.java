@@ -1,5 +1,6 @@
 package refereehelper.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
@@ -14,6 +15,7 @@ public class Team implements Serializable {
     private Integer ID;
     private String name;
     private Integer gameTypeID;
+    @JsonIgnore
     private Set<Match> matches = new HashSet<Match>(0);
 
     public Team(){
