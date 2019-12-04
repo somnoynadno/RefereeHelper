@@ -158,7 +158,7 @@ public class Application {
 			session.beginTransaction();
 
 			Query query = session.createQuery("from Team");
-			List<Request> list = query.getResultList();
+			List<Team> list = query.getResultList();
 
 			ObjectMapper ow = new ObjectMapper();
 			String json = ow.writeValueAsString(list);
@@ -203,7 +203,7 @@ public class Application {
 			session.beginTransaction();
 
 			Query query = session.createQuery("from GameType");
-			List<Request> list = query.getResultList();
+			List<GameType> list = query.getResultList();
 
 			ObjectMapper ow = new ObjectMapper();
 			String json = ow.writeValueAsString(list);
@@ -229,9 +229,9 @@ public class Application {
 				System.out.println(json);
 				return json;
 			} catch (JsonMappingException e) {
-				System.out.println("Request not found");
+				System.out.println("Event Type not found");
 				res.status(404);
-				return "Request not found";
+				return "Event type not found";
 			}
 			catch (JsonProcessingException e) {
 				// catch various errors
@@ -248,7 +248,7 @@ public class Application {
 			session.beginTransaction();
 
 			Query query = session.createQuery("from EventType");
-			List<Request> list = query.getResultList();
+			List<EventType> list = query.getResultList();
 
 			ObjectMapper ow = new ObjectMapper();
 			String json = ow.writeValueAsString(list);

@@ -27,5 +27,10 @@ document.addEventListener('DOMContentLoaded', async function(){
 
         $('#Versus').text(team1json.name + "  VS  " + team2json.name);
         $('#GameDate').text(d.toISOString().substring(0, 10) + " at " + d.toISOString().substring(11, 16));
+
+        let eventTypes = await fetch('http://localhost:4567/api/v1/event_type/')
+        eventTypesJson = await eventTypes.json();
+
+        console.log(eventTypesJson);
     }
 });
