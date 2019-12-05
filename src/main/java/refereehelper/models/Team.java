@@ -17,6 +17,7 @@ public class Team implements Serializable {
     private Integer gameTypeID;
     @JsonIgnore
     private Set<Match> matches = new HashSet<Match>(0);
+    private Set<Player> players = new HashSet<Player>(0);
 
     public Team(){
 
@@ -38,6 +39,10 @@ public class Team implements Serializable {
         return matches;
     }
 
+    public Set<Player> getPlayers() {
+        return players;
+    }
+
     public void setID(Integer ID) {
         this.ID = ID;
     }
@@ -52,5 +57,9 @@ public class Team implements Serializable {
 
     public void setMatches(Set<Match> matches) {
         this.matches = matches;
+    }
+
+    public void setPlayers(Set<Player> players) {
+        this.players = players;
     }
 }

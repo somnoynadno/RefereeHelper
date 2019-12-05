@@ -1,5 +1,6 @@
 package refereehelper.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import java.io.Serializable;
@@ -8,13 +9,16 @@ import java.util.Set;
 
 @JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class Player implements Serializable {
+
+    private static final long serialVersionUID = 1L;
+
     private Integer ID;
     private String name;
     private String surname;
     private Integer gameTypeID;
     private Integer teamID;
+    @JsonIgnore
     private Set<Event> events = new HashSet<Event>(0);
-
 
     public Player() {
 
@@ -67,4 +71,5 @@ public class Player implements Serializable {
     public void setEvents(Set<Event> events) {
         this.events = events;
     }
+
 }

@@ -22,5 +22,11 @@
                 <column name="match_ID" not-null="true" />
             </many-to-many>
         </set>
+        <set name="players" table="player" inverse="true" lazy="false" fetch="select">
+            <key>
+                <column name="team_ID" not-null="true" />
+            </key>
+            <one-to-many class="refereehelper.models.Player" />
+        </set>
     </class>
 </hibernate-mapping>

@@ -9,6 +9,7 @@ import refereehelper.models.*;
 import refereehelper.utils.HibernateUtil;
 
 import java.util.List;
+import java.util.Set;
 
 import static spark.Spark.*;
 
@@ -297,7 +298,7 @@ public class Application {
 					"left join match_team as MT on MT.match_ID = M.ID " +
 					"join game_type as GT on GT.ID = M.game_type_ID " +
 					"left join team as T on T.ID = MT.team_ID;");
-			List<Request> list = query.getResultList();
+			List<Match> list = query.getResultList();
 
 			ObjectMapper ow = new ObjectMapper();
 			String json = ow.writeValueAsString(list);
