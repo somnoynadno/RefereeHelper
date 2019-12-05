@@ -32,5 +32,59 @@ document.addEventListener('DOMContentLoaded', async function(){
         eventTypesJson = await eventTypes.json();
 
         console.log(eventTypesJson);
+
+        for (let elem of eventTypesJson){
+            $('#event_type').append('<option value="' + elem.id + '">' + elem.name + '</option>');
+        }
+
+        $('#team').append('<option value="1">' + team1json.name + '</option>');
+        $('#team').append('<option value="2">' + team2json.name + '</option>');
+
+        $('#team').change(function(){
+            console.log("Team changed");
+            let id = parseInt($('#team').find(":selected").val());
+            console.log(id);
+            $('#player1').empty();
+            $('#player2').empty();
+            if (id == 1){
+                for (let elem of team1json.players){
+                    $('#player1').append('<option value="' + elem.id + '">' +
+                                            elem.name + ' ' + elem.surname + '</option>');
+                }
+                for (let elem of team1json.players){
+                    $('#player2').append('<option value="' + elem.id + '">' +
+                                            elem.name + ' ' + elem.surname + '</option>');
+                }
+            }
+            else{
+                for (let elem of team2json.players){
+                    $('#player1').append('<option value="' + elem.id + '">' +
+                                            elem.name + ' ' + elem.surname + '</option>');
+                }
+                for (let elem of team2json.players){
+                    $('#player2').append('<option value="' + elem.id + '">' +
+                                            elem.name + ' ' + elem.surname + '</option>');
+                }
+            }
+        });
+
+        $('#event_type').change(function(){
+            console.log("Event type changed");
+            let id = parseInt($('#event_type').find(":selected").val());
+            let players_num = eventTypesJson.find(x => x.id == id).playersNum;
+            console.log(players_num);
+            if (players_num == 1){
+                $('#player2').empty();
+                $('#player2').attr("disabled", "disabled");
+            }
+            else{
+                $('#player2').removeAttr("disabled");
+            }
+        });
+
+        $('#finish').click(function(){
+           console.log("Finished");
+           window.location.href = 'statistics.html';
+       });
     }
 });
