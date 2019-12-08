@@ -1,4 +1,6 @@
 let currentEventID = 1;
+let currentPlayerNum = 2;
+let currentTeam = 1;
 
 document.addEventListener('DOMContentLoaded', async function(){
     let url_string = window.location.href;
@@ -24,6 +26,8 @@ document.addEventListener('DOMContentLoaded', async function(){
         team1json = await response1.json();
         team2json = await response2.json();
 
+        currentTeam = team1json.id;
+
         console.log(team1json);
         console.log(team2json);
 
@@ -44,28 +48,36 @@ document.addEventListener('DOMContentLoaded', async function(){
 
         $('#team').change(function(){
             console.log("Team changed");
+
             let id = parseInt($('#team').find(":selected").val());
-            console.log(id);
+            currentTeam = id;
+            console.log(currentTeam);
+
             $('#player1').empty();
             $('#player2').empty();
-            if (id == 1){
+
+            if (currentTeam == 1){
                 for (let elem of team1json.players){
                     $('#player1').append('<option value="' + elem.id + '">' +
                                             elem.name + ' ' + elem.surname + '</option>');
                 }
-                for (let elem of team1json.players){
-                    $('#player2').append('<option value="' + elem.id + '">' +
-                                            elem.name + ' ' + elem.surname + '</option>');
+                if (currentPlayerNum == 2){
+                    for (let elem of team1json.players){
+                        $('#player2').append('<option value="' + elem.id + '">' +
+                                                elem.name + ' ' + elem.surname + '</option>');
+                    }
                 }
             }
-            else{
+            else {
                 for (let elem of team2json.players){
                     $('#player1').append('<option value="' + elem.id + '">' +
                                             elem.name + ' ' + elem.surname + '</option>');
                 }
-                for (let elem of team2json.players){
-                    $('#player2').append('<option value="' + elem.id + '">' +
-                                            elem.name + ' ' + elem.surname + '</option>');
+                if (currentPlayerNum == 2){
+                    for (let elem of team2json.players){
+                        $('#player2').append('<option value="' + elem.id + '">' +
+                                                elem.name + ' ' + elem.surname + '</option>');
+                    }
                 }
             }
         });
@@ -75,12 +87,26 @@ document.addEventListener('DOMContentLoaded', async function(){
             let id = parseInt($('#event_type').find(":selected").val());
             let players_num = eventTypesJson.find(x => x.id == id).playersNum;
             console.log(players_num);
+            currentPlayerNum = players_num;
             if (players_num == 1){
                 $('#player2').empty();
                 $('#player2').attr("disabled", "disabled");
             }
             else{
                 $('#player2').removeAttr("disabled");
+
+                if (currentTeam == 1){
+                    for (let elem of team1json.players){
+                        $('#player2').append('<option value="' + elem.id + '">' +
+                                                elem.name + ' ' + elem.surname + '</option>');
+                    }
+                }
+                else {
+                    for (let elem of team2json.players){
+                        $('#player2').append('<option value="' + elem.id + '">' +
+                                                elem.name + ' ' + elem.surname + '</option>');
+                    }
+                }
             }
         });
 
