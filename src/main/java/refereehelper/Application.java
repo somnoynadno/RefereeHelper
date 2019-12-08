@@ -9,6 +9,7 @@ import refereehelper.models.*;
 import refereehelper.utils.HibernateUtil;
 
 import java.util.Date;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -324,6 +325,36 @@ public class Application {
 			System.out.println(team2ID);
 			System.out.println(gameTypeID);
 
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			// delete request, create match and add relations with teams
+			Request r = session.load(Request.class, id);
+			session.delete(r);
+
+			Match m = new Match();
+			m.setDate(date);
+			m.setGameTypeID(gameTypeID);
+			m.setID(id);
+
+			Set<Team> teams = new HashSet<Team>(0);
+			Team team1 = session.load(Team.class, team1ID);
+			Team team2 = session.load(Team.class, team2ID);
+			teams.add(team1);
+			teams.add(team2);
+
+			m.setTeams(teams);
+			session.save(m);
+
+			// because he doesn't wan't to map many-to-many
+			session.createSQLQuery("insert into match_team (match_ID, team_ID) " +
+					"values (" + id.toString() + ", " + team1ID.toString() + ");").executeUpdate();
+			session.createSQLQuery("insert into match_team (match_ID, team_ID) " +
+					"values (" + id.toString() + ", " + team2ID.toString() + ");").executeUpdate();
+
+			session.getTransaction().commit();
+			session.close();
+
 			return "Nice";
 		});
 
@@ -332,7 +363,10 @@ public class Application {
 		get("/api/v1/match/add_event/", (req, res) -> {
 			Integer id = Integer.parseInt(req.queryMap().value("id"));
 			Integer player1ID = Integer.parseInt(req.queryMap().value("player1ID"));
-			Integer player2ID = Integer.parseInt(req.queryMap().value("player2ID"));
+			Integer player2ID;
+			if (!req.queryMap().value("player2ID").equals("")) {
+				player2ID = Integer.parseInt(req.queryMap().value("player2ID"));
+			} else player2ID = 0;
 			Integer eventTypeID = Integer.parseInt(req.queryMap().value("eventTypeID"));
 			Integer time = Integer.parseInt(req.queryMap().value("time"));
 
@@ -341,6 +375,43 @@ public class Application {
 			System.out.println(player1ID);
 			System.out.println(player2ID);
 			System.out.println(eventTypeID);
+
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			// save event and add relations with players
+			Event e = new Event();
+			e.setEventTypeID(eventTypeID);
+			e.setMatchID(id);
+			e.setTime(time);
+
+			Set<Player> players = new HashSet<Player>(0);
+			Player player1 = session.load(Player.class, player1ID);
+			players.add(player1);
+
+			if (player2ID != 0){
+				Player player2 = session.load(Player.class, player2ID);
+				players.add(player2);
+			}
+
+			e.setPlayers(players);
+			session.save(e);
+
+			Query query = session.createQuery("from Event order by id desc").setMaxResults(1);
+			List<Event> list = query.getResultList();
+			Event event = list.get(0);
+			Integer eventID = event.getID();
+
+			// because he doesn't wan't to map many-to-many
+			session.createSQLQuery("insert into event_player (event_ID, player_ID) " +
+					"values (" + eventID.toString() + ", " + player1ID.toString() + ");").executeUpdate();
+			if (player2ID != 0) {
+				session.createSQLQuery("insert into event_player (event_ID, player_ID) " +
+						"values (" + eventID.toString() + ", " + player2ID.toString() + ");").executeUpdate();
+			}
+
+			session.getTransaction().commit();
+			session.close();
 
 			return "Event added";
 		});

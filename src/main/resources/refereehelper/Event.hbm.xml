@@ -17,7 +17,7 @@
         <property name="time" type="int">
             <column name="time" not-null="true" unique="false" />
         </property>
-        <set name="players" table="event_player" inverse="true" lazy="true" fetch="select">
+        <set name="players" table="event_player" inverse="true" lazy="false" cascade="all" fetch="select">
             <key>
                 <column name="event_ID" not-null="true" />
             </key>

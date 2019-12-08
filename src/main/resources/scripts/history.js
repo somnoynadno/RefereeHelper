@@ -4,7 +4,7 @@ document.addEventListener('DOMContentLoaded', async function(){
 
         console.log(myJson);
 
-        for (let i = 0; i < myJson.length; i += 2){
+        for (let i = 0; i < myJson.length-1; i += 2){
             let tr = document.createElement('tr');
             let id = document.createElement('th');
             let gt = document.createElement('td');
@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded', async function(){
 
             id.scope = "row";
 
-            elem = myJson[i];
-            elem1 = myJson[i+1];
+            let elem = myJson[i];
+            let elem1 = myJson[i+1];
 
             id.textContent = elem[0];
             gt.textContent = elem[2];

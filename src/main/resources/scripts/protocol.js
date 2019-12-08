@@ -1,5 +1,5 @@
 let currentEventID = 1;
-let currentPlayerNum = 2;
+let currentPlayerNum = 1;
 let currentTeam = 1;
 
 document.addEventListener('DOMContentLoaded', async function(){
@@ -40,11 +40,14 @@ document.addEventListener('DOMContentLoaded', async function(){
         console.log(eventTypesJson);
 
         for (let elem of eventTypesJson){
-            $('#event_type').append('<option value="' + elem.id + '">' + elem.name + '</option>');
+            if (elem.gameTypeID == myJson.gameTypeID)
+                $('#event_type').append('<option value="' + elem.id + '">' + elem.name + '</option>');
         }
 
         $('#team').append('<option value="1">' + team1json.name + '</option>');
         $('#team').append('<option value="2">' + team2json.name + '</option>');
+
+        $('#player2').attr("disabled", "disabled");
 
         $('#team').change(function(){
             console.log("Team changed");
@@ -112,10 +115,16 @@ document.addEventListener('DOMContentLoaded', async function(){
 
         $('#finish').click(function(){
            console.log("Finished");
-           window.location.href = 'statistics.html';
+           window.location.href = 'statistics.html?id=' + myJson.id;
        });
 
        $('#SubmitButton').click(function(){
+            if ($('#time').val() == ""){
+                alert("You need to provide time");
+                return;
+            }
+            if ($('#player1').val() == "") return;
+
             // send to server
              $.ajax({
                 url: '/api/v1/match/add_event/',
