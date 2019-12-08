@@ -8,6 +8,7 @@ import org.hibernate.query.Query;
 import refereehelper.models.*;
 import refereehelper.utils.HibernateUtil;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Set;
 
@@ -306,6 +307,42 @@ public class Application {
 			System.out.println(json);
 			session.close();
 			return json;
+		});
+
+		// POST method doesn't work the way that I want it to work
+		// so it is GET
+		get("/api/v1/match/create/", (req, res) -> {
+			Integer id = Integer.parseInt(req.queryMap().value("id"));
+			Integer team1ID = Integer.parseInt(req.queryMap().value("team1ID"));
+			Integer team2ID = Integer.parseInt(req.queryMap().value("team2ID"));
+			Date date = new Date(Long.parseLong(req.queryMap().value("date")));
+			Integer gameTypeID = Integer.parseInt(req.queryMap().value("gameTypeID"));
+
+			System.out.println(id);
+			System.out.println(date);
+			System.out.println(team1ID);
+			System.out.println(team2ID);
+			System.out.println(gameTypeID);
+
+			return "Nice";
+		});
+
+		// POST method doesn't work the way that I want it to work
+		// so it is GET
+		get("/api/v1/match/add_event/", (req, res) -> {
+			Integer id = Integer.parseInt(req.queryMap().value("id"));
+			Integer player1ID = Integer.parseInt(req.queryMap().value("player1ID"));
+			Integer player2ID = Integer.parseInt(req.queryMap().value("player2ID"));
+			Integer eventTypeID = Integer.parseInt(req.queryMap().value("eventTypeID"));
+			Integer time = Integer.parseInt(req.queryMap().value("time"));
+
+			System.out.println(id);
+			System.out.println(time);
+			System.out.println(player1ID);
+			System.out.println(player2ID);
+			System.out.println(eventTypeID);
+
+			return "Event added";
 		});
 	}
 

@@ -1,3 +1,5 @@
+let currentEventID = 1;
+
 document.addEventListener('DOMContentLoaded', async function(){
     let url_string = window.location.href;
     let url = new URL(url_string);
@@ -85,6 +87,65 @@ document.addEventListener('DOMContentLoaded', async function(){
         $('#finish').click(function(){
            console.log("Finished");
            window.location.href = 'statistics.html';
+       });
+
+       $('#SubmitButton').click(function(){
+            // send to server
+             $.ajax({
+                url: '/api/v1/match/add_event/',
+                method: 'GET',
+                contentType: 'json',
+                data:  {'time': $('#time').val(),
+                        'player1ID': $('#player1').val(),
+                        'player2ID': $('#player2').val(),
+                        'eventTypeID': $('#event_type').val(),
+                        'id': myJson.id},
+                success: function(data){
+                    console.log(data);
+                }
+            });
+
+            // add to table
+            let tr = document.createElement('tr');
+            let id = document.createElement('th');
+            let event = document.createElement('td');
+            let team = document.createElement('td');
+            let player1 = document.createElement('td');
+            let player2 = document.createElement('td');
+            let time = document.createElement('td');
+
+            id.textContent = currentEventID;
+            event.textContent = $('#event_type').find(":selected").text();
+            player1.textContent = $('#player1').find(":selected").text();
+            player2.textContent = $('#player2').find(":selected").text();
+            time.textContent = $('#time').val();
+            team.textContent = $('#team').find(":selected").text();
+
+            currentEventID++;
+
+            tr.appendChild(id);
+            tr.appendChild(event);
+            tr.appendChild(team);
+            tr.appendChild(player1);
+            tr.appendChild(player2);
+            tr.appendChild(time);
+
+            $('#ProtocolTableBody').append(tr);
+       });
+
+        // create new match here
+       $.ajax({
+            url: '/api/v1/match/create/',
+            method: 'GET',
+            contentType: 'json',
+            data:  {'date': myJson.date,
+                    'team1ID': myJson.team1ID,
+                    'team2ID': myJson.team2ID,
+                    'gameTypeID': myJson.gameTypeID,
+                    'id': myJson.id},
+            success: function(data){
+       		    console.log(data);
+            }
        });
     }
 });
