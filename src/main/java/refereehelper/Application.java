@@ -346,14 +346,20 @@ public class Application {
 			m.setTeams(teams);
 			session.save(m);
 
-			// because he doesn't wan't to map many-to-many
-			session.createSQLQuery("insert into match_team (match_ID, team_ID) " +
-					"values (" + id.toString() + ", " + team1ID.toString() + ");").executeUpdate();
-			session.createSQLQuery("insert into match_team (match_ID, team_ID) " +
-					"values (" + id.toString() + ", " + team2ID.toString() + ");").executeUpdate();
-
 			session.getTransaction().commit();
 			session.close();
+
+			Session map_session = HibernateUtil.getSessionFactory().openSession();
+			map_session.beginTransaction();
+
+			// because he doesn't wan't to map many-to-many
+			map_session.createSQLQuery("insert into match_team (match_ID, team_ID, score) " +
+					"values (" + id.toString() + ", " + team1ID.toString() + ", 0);").executeUpdate();
+			map_session.createSQLQuery("insert into match_team (match_ID, team_ID, score) " +
+					"values (" + id.toString() + ", " + team2ID.toString() + ", 0);").executeUpdate();
+
+			map_session.getTransaction().commit();
+			map_session.close();
 
 			return "Nice";
 		});
@@ -408,6 +414,21 @@ public class Application {
 			if (player2ID != 0) {
 				session.createSQLQuery("insert into event_player (event_ID, player_ID) " +
 						"values (" + eventID.toString() + ", " + player2ID.toString() + ");").executeUpdate();
+			}
+
+			// update score if needed
+			if (event.getEventTypeID() == 7){
+				session.createSQLQuery("update match_team set score = score + 3 " +
+						"where match_ID = " + event.getMatchID().toString() + " " +
+						"and team_ID = " + player1.getTeamID().toString() + ";").executeUpdate();
+			} else if (event.getEventTypeID() == 6){
+				session.createSQLQuery("update match_team set score = score + 2 " +
+						"where match_ID = " + event.getMatchID().toString() + " " +
+						"and team_ID = " + player1.getTeamID().toString() + ";").executeUpdate();
+			} else if (event.getEventTypeID() == 1){
+				session.createSQLQuery("update match_team set score = score + 1 " +
+						"where match_ID = " + event.getMatchID().toString() + " " +
+						"and team_ID = " + player1.getTeamID().toString() + ";").executeUpdate();
 			}
 
 			session.getTransaction().commit();
