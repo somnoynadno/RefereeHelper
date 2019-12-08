@@ -6,7 +6,6 @@
     <class name="refereehelper.models.Match" table="game_match" catalog="referee">
         <id name="ID" type="java.lang.Integer">
             <column name="ID" />
-            <generator class="identity" />
         </id>
         <property name="gameTypeID" type="int">
             <column name="game_type_ID" not-null="true" unique="false" />
