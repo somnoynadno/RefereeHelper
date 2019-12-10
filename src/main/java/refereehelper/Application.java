@@ -125,6 +125,31 @@ public class Application {
 			return "Fine";
 		});
 
+		// POST method doesn't work the way that I want it to work
+		// so it is GET
+		get("/api/v1/request/create/", (req, res) -> {
+			Integer team1ID = Integer.parseInt(req.queryMap().value("team1ID"));
+			Integer team2ID = Integer.parseInt(req.queryMap().value("team2ID"));
+			Integer gameTypeID = Integer.parseInt(req.queryMap().value("gameTypeID"));
+			Date date = new Date(Long.parseLong(req.queryMap().value("date")));
+
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			Request request = new Request();
+			request.setDate(date);
+			request.setGameTypeID(gameTypeID);
+			request.setTeam1ID(team1ID);
+			request.setTeam2ID(team2ID);
+			request.setIsAccepted(new Byte("0"));
+
+			session.save(request);
+			session.getTransaction().commit();
+			session.close();
+
+			return "Accepted";
+		});
+
 		get("api/v1/team/:id", (req, res) -> {
 			Session session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
@@ -417,15 +442,15 @@ public class Application {
 			}
 
 			// update score if needed
-			if (event.getEventTypeID() == 7){
+			if (event.getEventTypeID() == 7){ // basketball 3 score goal
 				session.createSQLQuery("update match_team set score = score + 3 " +
 						"where match_ID = " + event.getMatchID().toString() + " " +
 						"and team_ID = " + player1.getTeamID().toString() + ";").executeUpdate();
-			} else if (event.getEventTypeID() == 6){
+			} else if (event.getEventTypeID() == 6){ // basketball 2 score goal
 				session.createSQLQuery("update match_team set score = score + 2 " +
 						"where match_ID = " + event.getMatchID().toString() + " " +
 						"and team_ID = " + player1.getTeamID().toString() + ";").executeUpdate();
-			} else if (event.getEventTypeID() == 1){
+			} else if (event.getEventTypeID() == 1){ // football goal
 				session.createSQLQuery("update match_team set score = score + 1 " +
 						"where match_ID = " + event.getMatchID().toString() + " " +
 						"and team_ID = " + player1.getTeamID().toString() + ";").executeUpdate();

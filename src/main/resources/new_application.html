@@ -9,7 +9,7 @@
     <link rel="stylesheet" type="text/css" href="styles/vendor.min.css" />
     <link rel="stylesheet" type="text/css" href="styles/index.css" />
 
-    <script src="scripts/applications.js"></script>
+    <script src="scripts/new_application.js"></script>
 
     <title>Referee Helper</title>
 </head>
@@ -29,7 +29,7 @@
                     <a class="nav-link" href="/protocol.html">New match protocol</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link active" href="/applications.html">Applications</a>
+                    <a class="nav-link" href="/applications.html">Applications</a>
                 </li>
                 <li class="nav-item">
                     <a class="nav-link" href="/statistics.html">Game statistics</a>
@@ -38,7 +38,7 @@
                     <a class="nav-link" href="/history.html">History</a>
                 </li>
                 <li class="nav-item">
-                    <a class="nav-link" href="/new_application.html">New application</a>
+                    <a class="nav-link active" href="/new_application.html">New application</a>
                 </li>
             </ul>
         </div>
@@ -48,24 +48,45 @@
     <div class="container">
         <div class="row justify-content-center mb-2">
             <div class="col col-auto">
-                <h1>Match applications</h1>
+                <h1>New application</h1>
             </div>
-            <table class="table" id="ApplicationsTable">
-                <thead>
-                <tr>
-                    <th scope="col">#</th>
-                    <th scope="col">Game type</th>
-                    <th scope="col">Team 1</th>
-                    <th scope="col">Team 2</th>
-                    <th scope="col">Date</th>
-                    <th scope="col">Decision</th>
-                </tr>
-                </thead>
-                <tbody id="ApplicationsTableBody">
-
-                </tbody>
-            </table>
         </div>
+        <form class="form-group">
+            <div class="row">
+                <div class="col col-md-6">
+                    <label for="date">Date:</label>
+                    <input type="date" class="form-control" id="date" name="date" placeholder="Date" required>
+                </div>
+                <div class="col col-md-6">
+                    <label for="time">Time:</label>
+                    <input type="time" class="form-control" id="time" name="time" placeholder="Time" required>
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col col-md-4">
+                    <label for="game_type">Game type:</label>
+                    <select class="form-control" id="game_type">
+
+                    </select>
+                </div>
+                <div class="col col-md-4">
+                    <label for="team1">Team 1:</label>
+                    <select class="form-control" id="team1">
+
+                    </select>
+                </div>
+                <div class="col col-md-4">
+                    <label for="team2">Team 2:</label>
+                    <select class="form-control" id="team2">
+
+                    </select>
+                </div>
+            </div>
+            <div class="row mt-4 justify-content-end">
+                <button class="btn btn-secondary mr-2" type="reset">Clean</button>
+                <button class="btn btn-primary mr-4" id="submit" type="button">Submit</button>
+            </div>
+        </form>
     </div>
 </main>
 
