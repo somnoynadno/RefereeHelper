@@ -94,7 +94,6 @@ public class Application {
 			Session session = HibernateUtil.getSessionFactory().openSession();
 			session.beginTransaction();
 
-			ObjectMapper ow = new ObjectMapper();
 			Integer id = Integer.parseInt(req.params(":id"));
 
 			Request request = session.load(Request.class, id);
@@ -104,6 +103,7 @@ public class Application {
 			session.getTransaction().commit();
 			session.close();
 
+			res.status(202);
 			return "Fine";
 		});
 
@@ -113,13 +113,13 @@ public class Application {
 
 			ObjectMapper ow = new ObjectMapper();
 			Integer id = Integer.parseInt(req.params(":id"));
-
 			Request request = session.load(Request.class, id);
 
 			session.remove(request);
 			session.getTransaction().commit();
 			session.close();
 
+			res.status(202);
 			return "Fine";
 		});
 
@@ -145,6 +145,7 @@ public class Application {
 			session.getTransaction().commit();
 			session.close();
 
+			res.status(201);
 			return "Accepted";
 		});
 
@@ -380,6 +381,7 @@ public class Application {
 			map_session.getTransaction().commit();
 			map_session.close();
 
+			res.status(201);
 			return "Nice";
 		});
 
@@ -453,6 +455,7 @@ public class Application {
 			session.getTransaction().commit();
 			session.close();
 
+			res.status(201);
 			return "Event added";
 		});
 
