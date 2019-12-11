@@ -29,10 +29,22 @@ document.addEventListener('DOMContentLoaded', async function(){
         console.log(json);
         d = new Date(json.date);
 
+        let p1 = json.passes1;
+        let p2 = json.passes2;
+        let p = p1 + p2;
+        let possession;
+
+        if (p == 0){
+            possession = "can't count";
+        } else {
+            possession = Math.round(p1 / p * 100).toString() + "% / " +
+                         Math.round(p2 / p * 100).toString() + "%";
+        }
+
         $('#Versus').text(wrap(json.team1.name) + "  vs  " + wrap(json.team2.name));
         $('#Score').text(json.score1 + " : " + json.score2);
         $('#GameDate').text(d.toISOString().substring(0, 10) + " at " + d.toISOString().substring(11, 16));
         $("#Penalties").text("Sum of penalties: " + json.penalties1 + " : " + json.penalties2);
-        $('#BallPossession').text("Possession of ball: " + json.passes1 + ' : ' + json.passes2);
+        $('#BallPossession').text("Possession of ball: " + possession);
     }
 });
