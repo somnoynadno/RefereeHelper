@@ -67,9 +67,9 @@ document.addEventListener('DOMContentLoaded', async function(){
                     },
             success: function(data){
                 console.log(data);
+                window.location.replace("/applications.html");
             }
         });
 
-        window.location.replace("/applications.html");
     });
 });

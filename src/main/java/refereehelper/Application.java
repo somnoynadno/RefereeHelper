@@ -3,15 +3,14 @@ package refereehelper;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonMappingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import org.hibernate.HibernateException;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import refereehelper.models.*;
 import refereehelper.utils.HibernateUtil;
+import refereehelper.utils.Statistics;
 
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 import static spark.Spark.*;
 
@@ -41,8 +40,7 @@ public class Application {
 				System.out.println("Request not found");
 				res.status(404);
 				return "Request not found";
-			}
-			catch (JsonProcessingException e) {
+			} catch (JsonProcessingException e) {
 				// catch various errors
 				e.printStackTrace();
 				res.status(500);
@@ -170,8 +168,7 @@ public class Application {
 				System.out.println("Team not found");
 				res.status(404);
 				return "Team not found";
-			}
-			catch (JsonProcessingException e) {
+			} catch (JsonProcessingException e) {
 				// catch various errors
 				e.printStackTrace();
 				res.status(500);
@@ -215,8 +212,7 @@ public class Application {
 				System.out.println("Request not found");
 				res.status(404);
 				return "Request not found";
-			}
-			catch (JsonProcessingException e) {
+			} catch (JsonProcessingException e) {
 				// catch various errors
 				e.printStackTrace();
 				res.status(500);
@@ -260,8 +256,7 @@ public class Application {
 				System.out.println("Event Type not found");
 				res.status(404);
 				return "Event type not found";
-			}
-			catch (JsonProcessingException e) {
+			} catch (JsonProcessingException e) {
 				// catch various errors
 				e.printStackTrace();
 				res.status(500);
@@ -305,8 +300,7 @@ public class Application {
 				System.out.println("Match not found");
 				res.status(404);
 				return "Match not found";
-			}
-			catch (JsonProcessingException e) {
+			} catch (JsonProcessingException e) {
 				// catch various errors
 				e.printStackTrace();
 				res.status(500);
@@ -420,7 +414,7 @@ public class Application {
 			Player player1 = session.load(Player.class, player1ID);
 			players.add(player1);
 
-			if (player2ID != 0){
+			if (player2ID != 0) {
 				Player player2 = session.load(Player.class, player2ID);
 				players.add(player2);
 			}
@@ -442,15 +436,15 @@ public class Application {
 			}
 
 			// update score if needed
-			if (event.getEventTypeID() == 7){ // basketball 3 score goal
+			if (event.getEventTypeID() == 7) { // basketball 3 score goal
 				session.createSQLQuery("update match_team set score = score + 3 " +
 						"where match_ID = " + event.getMatchID().toString() + " " +
 						"and team_ID = " + player1.getTeamID().toString() + ";").executeUpdate();
-			} else if (event.getEventTypeID() == 6){ // basketball 2 score goal
+			} else if (event.getEventTypeID() == 6) { // basketball 2 score goal
 				session.createSQLQuery("update match_team set score = score + 2 " +
 						"where match_ID = " + event.getMatchID().toString() + " " +
 						"and team_ID = " + player1.getTeamID().toString() + ";").executeUpdate();
-			} else if (event.getEventTypeID() == 1){ // football goal
+			} else if (event.getEventTypeID() == 1) { // football goal
 				session.createSQLQuery("update match_team set score = score + 1 " +
 						"where match_ID = " + event.getMatchID().toString() + " " +
 						"and team_ID = " + player1.getTeamID().toString() + ";").executeUpdate();
@@ -461,6 +455,76 @@ public class Application {
 
 			return "Event added";
 		});
-	}
 
+		get("/api/v1/statistics/:id", (req, res) -> {
+			Session session = HibernateUtil.getSessionFactory().openSession();
+			session.beginTransaction();
+
+			ObjectMapper ow = new ObjectMapper();
+			Integer id = Integer.parseInt(req.params(":id"));
+
+			try {
+				session.get(Match.class, id);
+			} catch (HibernateException e){
+				System.out.println("Match not found");
+				res.status(404);
+				return "Match not found";
+			}
+
+			Match m = session.load(Match.class, id);
+			List<Team> teamList = new ArrayList<Team>();
+			teamList.addAll(m.getTeams());
+
+			Query query1score = session.createNativeQuery("select score from match_team " +
+					"where match_ID = " + id + " and team_ID = " + teamList.get(0).getID());
+			Query query2score = session.createNativeQuery("select score from match_team " +
+					"where match_ID = " + id + " and team_ID = " + teamList.get(1).getID());
+
+			Query query1passes = session.createNativeQuery("select count(*) from event " +
+					"join event_player on event_player.event_ID = event.ID " +
+					"join player on player.ID = event_player.player_ID " +
+					"where match_ID = " + id + " and team_ID = " + teamList.get(0).getID() + " " +
+					"and event_type_ID in (2, 9)");
+			Query query2passes = session.createNativeQuery("select count(*) from event " +
+					"join event_player on event_player.event_ID = event.ID " +
+					"join player on player.ID = event_player.player_ID " +
+					"where match_ID = " + id + " and team_ID = " + teamList.get(1).getID() + " " +
+					"and event_type_ID in (2, 9)");
+			Query query1penalties = session.createNativeQuery("select count(*) from event " +
+					"join event_player on event_player.event_ID = event.ID " +
+					"join player on player.ID = event_player.player_ID " +
+					"where match_ID = " + id + " and team_ID = " + teamList.get(0).getID() + " " +
+					"and event_type_ID in (3, 4, 8)");
+			Query query2penalties = session.createNativeQuery("select count(*) from event " +
+					"join event_player on event_player.event_ID = event.ID " +
+					"join player on player.ID = event_player.player_ID " +
+					"where match_ID = " + id + " and team_ID = " + teamList.get(1).getID() + " " +
+					"and event_type_ID in (3, 4, 8)");
+
+			Integer score1 = Statistics.queryToInt(query1score);
+			Integer score2 = Statistics.queryToInt(query2score);
+			Integer passes1 = Statistics.queryToInt(query1passes);
+			Integer passes2 = Statistics.queryToInt(query2passes);
+			Integer penalties1 = Statistics.queryToInt(query1penalties);
+			Integer penalties2 = Statistics.queryToInt(query2penalties);
+
+			Statistics stats = new Statistics();
+
+			stats.setTeam1(teamList.get(0));
+			stats.setTeam2(teamList.get(1));
+			stats.setScore1(score1);
+			stats.setScore2(score2);
+			stats.setPenalties1(penalties1);
+			stats.setPenalties2(penalties2);
+			stats.setPasses1(passes1);
+			stats.setPasses2(passes2);
+			stats.setDate(m.getDate());
+
+			session.close();
+
+			res.header("Content-Type", "application/json");
+			String json = ow.writeValueAsString(stats);
+			return json;
+		});
+	}
 }

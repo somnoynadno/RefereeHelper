@@ -12,13 +12,21 @@ document.addEventListener('DOMContentLoaded', async function(){
         // render window to insert id
         $("#IDFormRow").show();
     } else {
+        let response = await fetch('http://localhost:4567/api/v1/request/' + id);
+        let myJso;
+        try{
+            myJson = await response.json();
+        } catch (SyntaxError){
+            $('#Title').html("<h1> Sorry, this application is not found =( </h1>");
+            console.log("Not found");
+            return;
+        }
+
         // render main window
         $("#ProtocolMain").show();
-        let response = await fetch('http://localhost:4567/api/v1/request/' + id);
-        let myJson = await response.json();
-        d = new Date(myJson.date);
 
         console.log(myJson);
+        d = new Date(myJson.date);
 
         let response1 = await fetch('http://localhost:4567/api/v1/team/' + myJson.team1ID);
         let response2 = await fetch('http://localhost:4567/api/v1/team/' + myJson.team2ID);
